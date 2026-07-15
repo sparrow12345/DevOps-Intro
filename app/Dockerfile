@@ -16,10 +16,11 @@ RUN CGO_ENABLED=0 GOOS=linux \
 # Stage 2: runtime stage
 FROM gcr.io/distroless/static:nonroot
 
-USER 65532:65532
-
 COPY --from=builder /quicknotes /quicknotes
+COPY --from=builder --chown=65532:65532 /src/seed.json /seed.json
 COPY --from=builder --chown=65532:65532 /data /data
+
+USER 65532:65532
 
 EXPOSE 8080
 

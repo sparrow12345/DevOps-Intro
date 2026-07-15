@@ -17,7 +17,8 @@ func main() {
 	seedPath := envOrDefault("SEED_PATH", "seed.json")
 
 	if len(os.Args) > 1 && os.Args[1] == "healthcheck" {
-		resp, err := http.Get("http://localhost:8080/health")
+		client := &http.Client{Timeout: 2 * time.Second}
+		resp, err := client.Get("http://localhost" + addr + "/health")
 		if err != nil || resp.StatusCode != http.StatusOK {
 			os.Exit(1)
 		}
