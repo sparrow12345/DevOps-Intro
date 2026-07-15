@@ -16,6 +16,15 @@ func main() {
 	dataPath := envOrDefault("DATA_PATH", "data/notes.json")
 	seedPath := envOrDefault("SEED_PATH", "seed.json")
 
+	if len(os.Args) > 1 && os.Args[1] == "healthcheck" {
+		client := &http.Client{Timeout: 2 * time.Second}
+		resp, err := client.Get("http://localhost" + addr + "/health")
+		if err != nil || resp.StatusCode != http.StatusOK {
+			os.Exit(1)
+		}
+		os.Exit(0)
+	}
+
 	if err := ensureSeeded(dataPath, seedPath); err != nil {
 		log.Fatalf("seed: %v", err)
 	}
